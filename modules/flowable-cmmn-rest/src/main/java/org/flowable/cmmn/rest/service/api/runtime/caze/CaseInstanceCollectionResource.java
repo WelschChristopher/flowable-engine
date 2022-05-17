@@ -336,14 +336,12 @@ public class CaseInstanceCollectionResource extends BaseCaseInstanceResource {
     })
     @PostMapping(value = "/cmmn-runtime/case-instances/delete")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void bulkDeleteCaseInstances(@ApiParam(name = "caseInstanceIds")
-    @RequestBody BulkDeleteInstancesRestActionRequest request, HttpServletResponse response) {
+    public void bulkDeleteCaseInstances(@RequestBody BulkDeleteInstancesRestActionRequest request, HttpServletResponse response) {
         if (BulkDeleteInstancesRestActionRequest.DELETE_ACTION.equals(request.getAction())) {
             if (restApiInterceptor != null) {
                 restApiInterceptor.bulkDeleteCaseInstances(request.getInstanceIds());
             }
             runtimeService.bulkDeleteCaseInstances(request.getInstanceIds());
-            response.setStatus(HttpStatus.NO_CONTENT.value());
         } else if (BulkDeleteInstancesRestActionRequest.TERMINATE_ACTION.equals(request.getAction())) {
             if (restApiInterceptor != null) {
                 restApiInterceptor.bulkTerminateCaseInstances(request.getInstanceIds());
