@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.flowable.common.engine.api.query.Query;
+import org.flowable.variable.api.runtime.VariableInstanceQuery;
 
 /**
  * Programmatic querying for {@link HistoricVariableInstance}s.
@@ -76,7 +77,12 @@ public interface HistoricVariableInstanceQuery extends Query<HistoricVariableIns
      * only select historic process variables like the given name and value (case insensitive)
      */
     HistoricVariableInstanceQuery variableValueLikeIgnoreCase(String variableName, String variableValue);
-    
+
+    /**
+     * only select historic process variables with one of the given names
+     */
+    HistoricVariableInstanceQuery variableNames(Set<String> variableNames);
+
     /**
      * Only select historic variables with the given scope id.
      */

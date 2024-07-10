@@ -73,7 +73,12 @@ public interface VariableInstanceQuery extends Query<VariableInstanceQuery, Vari
      * only select historic process variables like the given name and value (case insensitive)
      */
     VariableInstanceQuery variableValueLikeIgnoreCase(String variableName, String variableValue);
-    
+
+    /**
+     * only select historic process variables with one of the given names
+     */
+    VariableInstanceQuery variableNames(Set<String> variableNames);
+
     /**
      * Only select historic variables with the given scope id.
      */

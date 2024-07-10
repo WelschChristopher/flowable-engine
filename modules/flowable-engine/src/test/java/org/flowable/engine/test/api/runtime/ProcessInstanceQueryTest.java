@@ -2180,6 +2180,23 @@ public class ProcessInstanceQueryTest extends PluggableFlowableTestCase {
     }
 
     @Test
+    @Deployment(resources = { "org/flowable/engine/test/api/oneTaskProcess.bpmn20.xml" })
+    public void testIncludeVariableNames() throws Exception {
+        // Start process with a binary variable
+        ProcessInstance processInstance = runtimeService
+                .startProcessInstanceByKey("oneTaskProcess", Map.of("var1", "value1", "var2", "value2", "var3", "value3", "var4", "value4"));
+
+        processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstance.getId())
+                .includeProcessVariableNames(Set.of("var1", "var3")).singleResult();
+        assertThat(processInstance).isNotNull();
+
+        assertThat(processInstance.getProcessVariables().entrySet()).extracting(Map.Entry::getKey, Map.Entry::getValue).containsExactlyInAnyOrder(
+                tuple("var1", "value1"),
+                tuple("var3", "value3")
+        );
+    }
+
+    @Test
     public void testNativeQueryPaging() {
         assertThat(
                 runtimeService.createNativeProcessInstanceQuery().sql("SELECT * FROM " + managementService.getTableName(ProcessInstance.class)).listPage(0, 5))

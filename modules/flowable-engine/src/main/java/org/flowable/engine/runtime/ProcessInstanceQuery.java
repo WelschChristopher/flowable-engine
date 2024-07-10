@@ -415,6 +415,11 @@ public interface ProcessInstanceQuery extends Query<ProcessInstanceQuery, Proces
     ProcessInstanceQuery includeProcessVariables();
 
     /**
+     * Only include process variables in the process query result with a name matching one of the provided ones.
+     */
+    ProcessInstanceQuery includeProcessVariableNames(Set<String> variableNames);
+
+    /**
      * Only select process instances that failed due to an exception happening during a job execution.
      */
     ProcessInstanceQuery withJobException();

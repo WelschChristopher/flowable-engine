@@ -49,6 +49,7 @@ public class HistoricVariableInstanceQueryImpl extends AbstractQuery<HistoricVar
     protected String activityInstanceId;
     protected String variableName;
     protected String variableNameLike;
+    protected Set<String> variableNames;
     protected boolean excludeTaskRelated;
     protected boolean excludeVariableInitialization;
     protected String scopeId;
@@ -236,6 +237,15 @@ public class HistoricVariableInstanceQueryImpl extends AbstractQuery<HistoricVar
         }
         this.variableName = variableName;
         queryVariableValue = new QueryVariableValue(variableName, variableValue.toLowerCase(), QueryOperator.LIKE_IGNORE_CASE, true);
+        return this;
+    }
+
+    @Override
+    public HistoricVariableInstanceQuery variableNames(Set<String> variableNames) {
+        if (variableNames == null) {
+            throw new FlowableIllegalArgumentException("variableNames is null");
+        }
+        this.variableNames = variableNames;
         return this;
     }
 

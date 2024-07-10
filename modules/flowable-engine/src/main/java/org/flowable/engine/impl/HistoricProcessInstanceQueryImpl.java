@@ -97,6 +97,7 @@ public class HistoricProcessInstanceQueryImpl extends AbstractVariableQueryImpl<
     private List<List<String>> safeInvolvedGroups;
     protected IdentityLinkQueryObject involvedGroupIdentityLink;
     protected boolean includeProcessVariables;
+    protected Set<String> includeProcessVariableNames;
     protected boolean withJobException;
     protected String tenantId;
     protected String tenantIdLike;

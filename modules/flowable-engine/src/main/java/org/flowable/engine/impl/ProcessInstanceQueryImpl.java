@@ -84,6 +84,7 @@ public class ProcessInstanceQueryImpl extends AbstractVariableQueryImpl<ProcessI
     protected IdentityLinkQueryObject involvedGroupIdentityLink;
     protected SuspensionState suspensionState;
     protected boolean includeProcessVariables;
+    protected Set<String> includeProcessVariableNames;
     protected boolean withJobException;
     protected String name;
     protected String nameLike;
@@ -643,6 +644,13 @@ public class ProcessInstanceQueryImpl extends AbstractVariableQueryImpl<ProcessI
     @Override
     public ProcessInstanceQuery includeProcessVariables() {
         this.includeProcessVariables = true;
+        return this;
+    }
+
+    @Override
+    public ProcessInstanceQuery includeProcessVariableNames(Set<String> variableNames) {
+        this.includeProcessVariables = true;
+        this.includeProcessVariableNames = variableNames;
         return this;
     }
 

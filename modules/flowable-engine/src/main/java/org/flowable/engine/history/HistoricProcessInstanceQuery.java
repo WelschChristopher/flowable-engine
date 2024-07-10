@@ -534,6 +534,11 @@ public interface HistoricProcessInstanceQuery extends Query<HistoricProcessInsta
     HistoricProcessInstanceQuery includeProcessVariables();
 
     /**
+     * Only include process variables in the process query result with a name matching one of the provided ones.
+     */
+    HistoricProcessInstanceQuery includeProcessVariableNames(Set<String> variableNames);
+
+    /**
      * Only select process instances that failed due to an exception happening during a job execution.
      */
     HistoricProcessInstanceQuery withJobException();
