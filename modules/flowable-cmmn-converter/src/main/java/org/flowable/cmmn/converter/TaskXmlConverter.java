@@ -12,6 +12,7 @@
  */
 package org.flowable.cmmn.converter;
 
+import java.security.Provider;
 import java.util.Objects;
 
 import javax.xml.stream.XMLStreamReader;
@@ -49,6 +50,14 @@ public class TaskXmlConverter extends PlanItemDefinitionXmlConverter {
         String type = xtr.getAttributeValue(CmmnXmlConstants.FLOWABLE_EXTENSIONS_NAMESPACE, CmmnXmlConstants.ATTRIBUTE_TYPE);
         String className = xtr.getAttributeValue(CmmnXmlConstants.FLOWABLE_EXTENSIONS_NAMESPACE, CmmnXmlConstants.ATTRIBUTE_CLASS);
 
+        task = createServiceTask(xtr, type, className);
+
+        convertCommonTaskAttributes(xtr, task);
+        return task;
+    }
+
+    protected Task createServiceTask(XMLStreamReader xtr, String type, String className) {
+        Task task;
         if (type != null) {
 
             if (Objects.equals(type, ServiceTask.JAVA_TASK)) {
@@ -78,18 +87,21 @@ public class TaskXmlConverter extends PlanItemDefinitionXmlConverter {
         } else {
             task = new Task();
         }
-
-        convertCommonTaskAttributes(xtr, task);
         return task;
     }
 
     protected Task convertToJavaServiceTask(XMLStreamReader xtr, String className) {
         ServiceTask serviceTask = new ServiceTask();
+        configureServiceTask(xtr, serviceTask, className);
+        return serviceTask;
+    }
+
+    protected void configureServiceTask(XMLStreamReader xtr, ServiceTask serviceTask, String className) {
         serviceTask.setType(ServiceTask.JAVA_TASK);
 
         String expression = xtr.getAttributeValue(CmmnXmlConstants.FLOWABLE_EXTENSIONS_NAMESPACE, CmmnXmlConstants.ATTRIBUTE_EXPRESSION);
-        String delegateExpression = xtr.getAttributeValue(CmmnXmlConstants.FLOWABLE_EXTENSIONS_NAMESPACE, 
-                        CmmnXmlConstants.ATTRIBUTE_DELEGATE_EXPRESSION);
+        String delegateExpression = xtr.getAttributeValue(CmmnXmlConstants.FLOWABLE_EXTENSIONS_NAMESPACE,
+                CmmnXmlConstants.ATTRIBUTE_DELEGATE_EXPRESSION);
 
         if (StringUtils.isNotBlank(className)) {
             serviceTask.setImplementation(className);
@@ -110,7 +122,6 @@ public class TaskXmlConverter extends PlanItemDefinitionXmlConverter {
         serviceTask.setStoreResultVariableAsTransient(
             Boolean.parseBoolean(xtr.getAttributeValue(CmmnXmlConstants.FLOWABLE_EXTENSIONS_NAMESPACE, CmmnXmlConstants.ATTRIBUTE_STORE_RESULT_AS_TRANSIENT)));
 
-        return serviceTask;
     }
 
     protected Task convertToHttpTask(XMLStreamReader xtr, String className) {

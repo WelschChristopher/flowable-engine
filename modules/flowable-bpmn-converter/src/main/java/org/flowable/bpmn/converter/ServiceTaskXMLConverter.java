@@ -114,23 +114,11 @@ public class ServiceTaskXMLConverter extends BaseBpmnXMLConverter {
     @SuppressWarnings("unchecked")
     protected BaseElement convertXMLToElement(XMLStreamReader xtr, BpmnModel model) throws Exception {
         String serviceTaskType = BpmnXMLUtil.getAttributeValue(ATTRIBUTE_TYPE, xtr);
-        
-        ServiceTask serviceTask = null;
-        if (ServiceTask.HTTP_TASK.equals(serviceTaskType)) {
-            serviceTask = new HttpServiceTask();
-            
-        } else if (ServiceTask.CASE_TASK.equals(serviceTaskType)) {
-            serviceTask = new CaseServiceTask();
-            
-        } else if (ServiceTask.SEND_EVENT_TASK.equals(serviceTaskType)) {
-            serviceTask = new SendEventServiceTask();
-            
-        } else if (ServiceTask.EXTERNAL_WORKER_TASK.equals(serviceTaskType) || ServiceTask.EXTERNAL_WORKER_TASK_LEGACY.equals(serviceTaskType)) {
+
+        ServiceTask serviceTask = createServiceTask(serviceTaskType);
+
+        if (ServiceTask.EXTERNAL_WORKER_TASK_LEGACY.equals(serviceTaskType)) {
             serviceTaskType = ServiceTask.EXTERNAL_WORKER_TASK;
-            serviceTask = new ExternalWorkerServiceTask();
-            
-        } else {
-            serviceTask = new ServiceTask();
         }
         
         BpmnXMLUtil.addXMLLocation(serviceTask, xtr);
@@ -167,18 +155,8 @@ public class ServiceTaskXMLConverter extends BaseBpmnXMLConverter {
         }
         
         BpmnXMLUtil.addCustomAttributes(xtr, serviceTask, defaultElementAttributes, defaultActivityAttributes, defaultServiceTaskAttributes);
-        
-        if (serviceTask instanceof CaseServiceTask) {
-            convertCaseServiceTaskXMLProperties((CaseServiceTask) serviceTask, model, xtr);
-        } else if (serviceTask instanceof SendEventServiceTask) {
-            convertSendEventServiceTaskXMLProperties((SendEventServiceTask) serviceTask, model, xtr);
-        } else if (serviceTask instanceof ExternalWorkerServiceTask) {
-            convertExternalWorkerTaskXMLProperties((ExternalWorkerServiceTask) serviceTask, model, xtr);
-        } else if (serviceTask instanceof HttpServiceTask) {
-            convertHttpServiceTaskXMLProperties((HttpServiceTask) serviceTask, model, xtr);
-        } else {
-            parseChildElements(getXMLElementName(), serviceTask, model, xtr);
-        }
+
+        convertServiceTask(xtr, model, serviceTask);
 
         return serviceTask;
     }
@@ -200,6 +178,41 @@ public class ServiceTaskXMLConverter extends BaseBpmnXMLConverter {
         } else {
             writeServiceTaskAdditionalAttributes((ServiceTask) element, xtw);
         }
+    }
+
+    protected void convertServiceTask(XMLStreamReader xtr, BpmnModel model, ServiceTask serviceTask) throws Exception {
+        if (serviceTask instanceof CaseServiceTask) {
+            convertCaseServiceTaskXMLProperties((CaseServiceTask) serviceTask, model, xtr);
+        } else if (serviceTask instanceof SendEventServiceTask) {
+            convertSendEventServiceTaskXMLProperties((SendEventServiceTask) serviceTask, model, xtr);
+        } else if (serviceTask instanceof ExternalWorkerServiceTask) {
+            convertExternalWorkerTaskXMLProperties((ExternalWorkerServiceTask) serviceTask, model, xtr);
+        } else if (serviceTask instanceof HttpServiceTask) {
+            convertHttpServiceTaskXMLProperties((HttpServiceTask) serviceTask, model, xtr);
+        } else {
+            parseChildElements(getXMLElementName(), serviceTask, model, xtr);
+        }
+    }
+
+    protected ServiceTask createServiceTask(String serviceTaskType) {
+        ServiceTask serviceTask;
+        if (ServiceTask.HTTP_TASK.equals(serviceTaskType)) {
+            serviceTask = new HttpServiceTask();
+
+        } else if (ServiceTask.CASE_TASK.equals(serviceTaskType)) {
+            serviceTask = new CaseServiceTask();
+
+        } else if (ServiceTask.SEND_EVENT_TASK.equals(serviceTaskType)) {
+            serviceTask = new SendEventServiceTask();
+
+        } else if (ServiceTask.EXTERNAL_WORKER_TASK.equals(serviceTaskType) || ServiceTask.EXTERNAL_WORKER_TASK_LEGACY.equals(serviceTaskType)) {
+            serviceTaskType = ServiceTask.EXTERNAL_WORKER_TASK;
+            serviceTask = new ExternalWorkerServiceTask();
+
+        } else {
+            serviceTask = new ServiceTask();
+        }
+        return serviceTask;
     }
 
     protected void writeCaseServiceTaskAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw) throws Exception {
