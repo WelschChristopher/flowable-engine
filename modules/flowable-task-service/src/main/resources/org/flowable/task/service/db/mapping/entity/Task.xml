@@ -666,7 +666,7 @@
               </if>
               RES.SCOPE_ID_ IN
               <foreach item="scopeId" index="index" collection="scopeIdListItem" open="(" separator="," close=")">
-                  #{scopeId, jdbcType=VARCHAR}
+                  #{scopeId, jdbcType=NVARCHAR}
               </foreach>
           </foreach>
           )
@@ -1265,7 +1265,7 @@
                     </if>
                     RES.SCOPE_ID_ IN
                     <foreach item="scopeId" index="index" collection="scopeIdListItem" open="(" separator="," close=")">
-                        #{scopeId, jdbcType=VARCHAR}
+                        #{scopeId, jdbcType=NVARCHAR}
                     </foreach>
                 </foreach>
                 )

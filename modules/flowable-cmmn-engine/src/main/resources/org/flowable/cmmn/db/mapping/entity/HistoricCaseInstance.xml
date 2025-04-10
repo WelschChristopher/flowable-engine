@@ -756,8 +756,8 @@
         </if>
         <if test="callbackIds != null">
             and ${queryTablePrefix}CALLBACK_ID_ in
-            <foreach item="callBackId" index="index" collection="callbackIds" open="(" separator="," close=")">
-                #{callBackId, jdbcType=NVARCHAR}
+            <foreach item="callbackId" index="index" collection="callbackIds" open="(" separator="," close=")">
+                #{callbackId, jdbcType=VARCHAR}
             </foreach>
         </if>
         <if test="callbackType != null">

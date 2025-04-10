@@ -417,7 +417,7 @@
                     </if>
                     RES.CASE_INST_ID_ IN
                     <foreach item="caseInstanceId" index="index" collection="caseInstanceIdListItem" open="(" separator="," close=")">
-                        #{caseInstanceId, jdbcType=NVARCHAR}
+                        #{caseInstanceId, jdbcType=VARCHAR}
                     </foreach>
                 </foreach>
                 )
