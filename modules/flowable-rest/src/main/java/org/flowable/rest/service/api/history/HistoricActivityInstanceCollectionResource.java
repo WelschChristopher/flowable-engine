@@ -101,11 +101,6 @@ public class HistoricActivityInstanceCollectionResource extends HistoricActivity
             query.setProcessInstanceIds(new HashSet<>(Arrays.asList(list)));
         }
 
-        if (allRequestParams.get("processInstanceIds") != null) {
-            String[] csv = StringUtils.split(allRequestParams.get("processInstanceIds"), ","); // split by comma
-            query.setProcessInstanceIds(new HashSet<>(Arrays.asList(csv)));
-        }
-
         if (allRequestParams.get("processDefinitionId") != null) {
             query.setProcessDefinitionId(allRequestParams.get("processDefinitionId"));
         }

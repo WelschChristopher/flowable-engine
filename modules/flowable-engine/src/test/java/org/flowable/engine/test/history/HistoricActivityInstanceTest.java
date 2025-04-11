@@ -250,6 +250,7 @@ public class HistoricActivityInstanceTest extends PluggableFlowableTestCase {
     public void testQueryByProcessInstanceIds() {
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("noopProcess");
         ProcessInstance otherProcessInstance = runtimeService.startProcessInstanceByKey("noopProcess");
+        ProcessInstance instance3 = runtimeService.startProcessInstanceByKey("noopProcess");
 
         waitForHistoryJobExecutorToProcessAllJobs(7000, 100);
         assertThat(historyService.createHistoricActivityInstanceQuery().processInstanceIds(Set.of(processInstance.getId(), otherProcessInstance.getId()))
@@ -325,11 +326,13 @@ public class HistoricActivityInstanceTest extends PluggableFlowableTestCase {
             "org/flowable/engine/test/history/HistoricActivityInstanceTest.testCallSimpleSubProcess.bpmn20.xml" })
     public void testHistoricActivityInstanceCalledProcessIds() {
         runtimeService.createProcessInstanceBuilder().processDefinitionKey("callSimpleSubProcess").start();
+        runtimeService.createProcessInstanceBuilder().processDefinitionKey("callSimpleSubProcess").start();
+
         waitForHistoryJobExecutorToProcessAllJobs(7000, 100);
 
         HistoricProcessInstance calledProcess = historyService.createHistoricProcessInstanceQuery()
-                .processDefinitionKey("calledProcess")
-                .singleResult();
+                .processDefinitionKey("calledProcess").list().get(0);
+
         HistoricActivityInstance callingActivityInstance = historyService.createHistoricActivityInstanceQuery()
                 .calledProcessInstanceIds(Set.of("someId", calledProcess.getId())).singleResult();
 
